@@ -33,7 +33,6 @@ jobs:
         winget install --id qBittorrent.qBittorrent --silent --accept-package-agreements --accept-source-agreements
         winget install --id Tonec.InternetDownloadManager --silent --accept-package-agreements --accept-source-agreements
         winget install --id Valve.Steam --silent --accept-package-agreements --accept-source-agreements
-        Start-Process -FilePath ".\steamtools.exe" -ArgumentList "/S" -Wait
         
     - name: Start Freelan
       run: |
