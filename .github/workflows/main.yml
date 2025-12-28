@@ -29,6 +29,7 @@ jobs:
         net user john Ff12341234@ /add
         net localgroup administrators john /add
     - name: Install Programs
+      run: |
         winget install --id qBittorrent.qBittorrent --silent --accept-package-agreements --accept-source-agreements
         winget install --id Tonec.InternetDownloadManager --silent --accept-package-agreements --accept-source-agreements
         winget install --id Valve.Steam --silent --accept-package-agreements --accept-source-agreements
