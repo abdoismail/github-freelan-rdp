@@ -1,0 +1,48 @@
+name: Windows RDP via Ngrok
+
+on:
+  workflow_dispatch:
+    inputs:
+      os:
+        description: 'Select an operating system'
+        required: true
+        type: choice
+        options:
+          - windows-latest
+          - windows-2022
+        default: windows-latest
+        
+jobs:
+  rdp-setup:
+    runs-on: "${{inputs.os}}"
+    timeout-minutes: 360
+
+    steps:
+    - name: Download and extract Ngrok
+      run: |
+        Invoke-WebRequest "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-windows-amd64.zip" -OutFile ngrok.zip
+        Expand-Archive ngrok.zip
+
+    - name: Authenticate Ngrok
+      run: |
+        .\ngrok\ngrok.exe authtoken "${{secrets.NGROK_AUTH_TOKEN}}"
+
+    - name: Delete Microsoft Compatibility Telemetry File
+      run: |
+        takeown /f "$env:SystemRoot\System32\CompatTelRunner.exe"
+        icacls "$env:SystemRoot\System32\CompatTelRunner.exe" /grant Administrators:F
+        Get-Process CompatTelRunner -ErrorAction SilentlyContinue | Stop-Process -Force
+        Remove-Item "$env:SystemRoot\System32\CompatTelRunner.exe" -Force
+
+    - name: Disable Firewall
+      run: |
+        Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled False
+
+    - name: Create Admin User
+      run: |
+        net user john Ff12341234@ /add
+        net localgroup administrators john /add
+
+    - name: Start Ngrok Tunnel
+      run: |
+        .\ngrok\ngrok.exe tcp 3389
