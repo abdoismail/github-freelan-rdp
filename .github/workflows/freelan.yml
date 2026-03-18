@@ -64,16 +64,17 @@ jobs:
           Write-Host "Installing VCLibs..."
           Add-AppxPackage "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx"
           Write-Host "Installing Microsoft.UI.Xaml..."
-          $xamlUrl = "https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx"
-          Invoke-WebRequest -Uri $xamlUrl -OutFile "xaml.appx"
+          Invoke-WebRequest -Uri "https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx" -OutFile "xaml.appx"
           Add-AppxPackage "xaml.appx"
+          Write-Host "Installing Windows App Runtime..."
+          Invoke-WebRequest -Uri "https://aka.ms/windowsappruntimeinstall-x64" -OutFile "windowsappruntimeinstall.exe"
+          .\windowsappruntimeinstall.exe --quiet
           Write-Host "Installing winget..."
-          $wingetUrl = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-          Invoke-WebRequest -Uri $wingetUrl -OutFile "winget.msixbundle"
+          Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "winget.msixbundle"
           Add-AppxPackage "winget.msixbundle"
           Write-Host "Verifying winget..."
           winget --version
-
+          
       - name: Install qBittorrent
         if: ${{ github.event.inputs.install_programs == 'true' && github.event.inputs.install_qbittorrent == 'true' }}
         run: |
