@@ -62,17 +62,17 @@ jobs:
       - name: Install qBittorrent
         if: ${{ github.event.inputs.install_programs == 'true' && github.event.inputs.install_qbittorrent == 'true' }}
         run: |
-          winget install --id qBittorrent.qBittorrent --silent --accept-package-agreements --accept-source-agreements
+          winget install --id qBittorrent.qBittorrent --source winget --silent --accept-package-agreements --accept-source-agreements
 
       - name: Install Internet Download Manager
         if: ${{ github.event.inputs.install_programs == 'true' && github.event.inputs.install_idm == 'true' }}
         run: |
-          winget install --id Tonec.InternetDownloadManager --silent --accept-package-agreements --accept-source-agreements
+          winget install --id Tonec.InternetDownloadManager --source winget --silent --accept-package-agreements --accept-source-agreements
 
       - name: Install Steam
         if: ${{ github.event.inputs.install_programs == 'true' && github.event.inputs.install_steam == 'true' }}
         run: |
-          winget install --id Valve.Steam --silent --accept-package-agreements --accept-source-agreements
+          winget install --id Valve.Steam --silent --source winget --accept-package-agreements --accept-source-agreements
 
       - name: Start Freelan
         run: |
