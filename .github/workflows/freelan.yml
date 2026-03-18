@@ -57,6 +57,7 @@ jobs:
           net localgroup administrators john /add
           
       - name: Install winget
+        if: ${{ github.event.inputs.install_programs == 'true' }}
         uses: Cyberboss/install-winget@v1
           
       - name: Install qBittorrent
