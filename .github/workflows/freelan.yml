@@ -56,24 +56,8 @@ jobs:
           net user john Ff12341234@ /add
           net localgroup administrators john /add
           
-      - name: Bootstrap winget
-        if: ${{ github.event.inputs.runner_os == 'windows-2022' }}
-        shell: powershell
-        run: |
-          $progressPreference = 'silentlyContinue'
-          Write-Host "Downloading winget dependencies zip..."
-          Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/DesktopAppInstaller_Dependencies.zip" -OutFile "deps.zip"
-          Expand-Archive "deps.zip" -DestinationPath "deps"
-          Write-Host "Installing all x64 dependencies..."
-          Get-ChildItem "deps\x64\*.appx" | ForEach-Object {
-            Write-Host "  Installing $($_.Name)..."
-            Add-AppxPackage $_.FullName
-          }
-          Write-Host "Downloading winget and license..."
-          Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "winget.msixbundle"
-          Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/e53e159d00e04f729cc2180cffd1c02e_License1.xml" -OutFile "license.xml"
-          Write-Host "Installing winget with license..."
-          Add-AppxProvisionedPackage -Online -PackagePath ".\winget.msixbundle" -LicensePath ".\license.xml"
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
           
       - name: Install qBittorrent
         if: ${{ github.event.inputs.install_programs == 'true' && github.event.inputs.install_qbittorrent == 'true' }}
