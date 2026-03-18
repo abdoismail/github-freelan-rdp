@@ -69,11 +69,8 @@ jobs:
             Write-Host "  Installing $($_.Name)..."
             Add-AppxPackage $_.FullName
           }
-          Write-Host "Installing winget..."
-          Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "winget.msixbundle"
-          Add-AppxPackage "winget.msixbundle"
-          Write-Host "Registering winget for current user..."
-          Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+          Write-Host "Installing winget with license..."
+          Add-AppxProvisionedPackage -Online -PackagePath ".\winget.msixbundle" -LicensePath ".\license.xml"
           Write-Host "Verifying winget..."
           winget --version
           
