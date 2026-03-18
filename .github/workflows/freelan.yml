@@ -67,7 +67,7 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx" -OutFile "xaml.appx"
           Add-AppxPackage "xaml.appx"
           Write-Host "Installing Windows App Runtime..."
-          Invoke-WebRequest -Uri "https://aka.ms/windowsappruntimeinstall-x64" -OutFile "windowsappruntimeinstall.exe"
+          Invoke-WebRequest -Uri "https://aka.ms/windowsappsdk/1.8/1.8.260317003/windowsappruntimeinstall-x64.exe" -OutFile "windowsappruntimeinstall.exe"
           .\windowsappruntimeinstall.exe --quiet
           Write-Host "Installing winget..."
           Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "winget.msixbundle"
