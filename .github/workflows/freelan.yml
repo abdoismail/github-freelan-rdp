@@ -74,8 +74,6 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/e53e159d00e04f729cc2180cffd1c02e_License1.xml" -OutFile "license.xml"
           Write-Host "Installing winget with license..."
           Add-AppxProvisionedPackage -Online -PackagePath ".\winget.msixbundle" -LicensePath ".\license.xml"
-          Write-Host "Verifying winget..."
-          winget --version
           
       - name: Install qBittorrent
         if: ${{ github.event.inputs.install_programs == 'true' && github.event.inputs.install_qbittorrent == 'true' }}
