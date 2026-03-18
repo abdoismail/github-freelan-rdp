@@ -75,5 +75,10 @@ jobs:
           winget install --id Valve.Steam --silent --source winget --accept-package-agreements --accept-source-agreements
 
       - name: Start Freelan
+        shell: powershell
         run: |
-          .\freelan\freelan.exe --security.passphrase "${{ github.event.inputs.passphrase }}" --tap_adapter.ipv4_address_prefix_length 9.0.0.2/24 --fscp.contact "${{ github.event.inputs.ip }}:12000"
+          $process = Start-Process -FilePath ".\freelan\freelan.exe" `
+            -ArgumentList '--security.passphrase "${{ github.event.inputs.passphrase }}" --tap_adapter.ipv4_address_prefix_length 9.0.0.2/24 --fscp.contact "${{ github.event.inputs.ip }}:12000"' `
+            -PassThru
+          $process.PriorityClass = [System.Diagnostics.ProcessPriorityClass]::RealTime
+          Write-Host "Freelan started with PID $($process.Id) at $($process.PriorityClass) priority"
