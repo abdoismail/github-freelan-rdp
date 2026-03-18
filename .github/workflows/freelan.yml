@@ -55,20 +55,20 @@ jobs:
         run: |
           net user john Ff12341234@ /add
           net localgroup administrators john /add
-
-      - name: Bootstrap winget
+          
+      - name: Bootstrap winget (windows-2022 only)
         if: ${{ github.event.inputs.runner_os == 'windows-2022' }}
         shell: powershell
         run: |
           $progressPreference = 'silentlyContinue'
-          Write-Host "Installing VCLibs..."
-          Add-AppxPackage "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx"
-          Write-Host "Installing Microsoft.UI.Xaml..."
-          Invoke-WebRequest -Uri "https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx" -OutFile "xaml.appx"
-          Add-AppxPackage "xaml.appx"
-          Write-Host "Installing Windows App Runtime..."
-          Invoke-WebRequest -Uri "https://aka.ms/windowsappsdk/1.8/1.8.260317003/windowsappruntimeinstall-x64.exe" -OutFile "windowsappruntimeinstall.exe"
-          .\windowsappruntimeinstall.exe --quiet
+          Write-Host "Downloading winget dependencies zip..."
+          Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/DesktopAppInstaller_Dependencies.zip" -OutFile "deps.zip"
+          Expand-Archive "deps.zip" -DestinationPath "deps"
+          Write-Host "Installing all x64 dependencies..."
+          Get-ChildItem "deps\x64\*.appx" | ForEach-Object {
+            Write-Host "  Installing $($_.Name)..."
+            Add-AppxPackage $_.FullName
+          }
           Write-Host "Installing winget..."
           Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "winget.msixbundle"
           Add-AppxPackage "winget.msixbundle"
